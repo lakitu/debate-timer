@@ -19,7 +19,7 @@ const firebaseApp = firebase.initializeApp({
   appId: "1:47969277947:web:8ad910238718c08fa99d5e",
   measurementId: "G-1EEJVY9E3G"
 });
-const db = firebaseApp.firestore();
+export const db = firebaseApp.firestore();
 const auth = firebase.auth();
 //endregion
 
@@ -119,5 +119,5 @@ export default function App () {
 
   // no output if fonts not loaded
   if (room === '') return <StartScreen uid={uid} joinRoom={joinRoom} />;
-  else return <TimerScreen isHost={isHost} uid={uid} formatData={formatData} roomData={roomData}/>;
+  return <TimerScreen isHost={isHost} uid={uid} formatData={formatData} roomData={roomData}/>;
 }

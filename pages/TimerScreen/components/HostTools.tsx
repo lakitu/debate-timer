@@ -5,7 +5,7 @@ import {MAX_SPEECH_LENGTH} from "../../../interfaces";
 
 const HostTools = (props: {pauseSpeech:()=>void, nextSpeech:()=>void, speechTime: number }) => {
   const paused = props.speechTime <= MAX_SPEECH_LENGTH;
-  const pauseColor = (pressed: boolean) => pressed ? "yellow" : paused ? "lime" : "red"
+  const pauseColor = (pressed: boolean) => pressed ? "yellow" : paused ? "lightgreen" : "red"
   return (
     <View style={styles.wrapperCustom}>
       {/*Pause Button*/}

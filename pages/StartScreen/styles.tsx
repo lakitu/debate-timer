@@ -1,4 +1,4 @@
-import {StyleSheet} from "react-native";
+import {Platform, StyleSheet} from "react-native";
 
 export const StartScreenStyles = StyleSheet.create({
     container: {
@@ -22,5 +22,8 @@ export const StartScreenStyles = StyleSheet.create({
     },
     inputs: {
         padding: 3,
+    },
+    dropdown: {
+        width: Platform.OS === "web" ? 300 : "100%",
     }
 })

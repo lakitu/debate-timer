@@ -44,6 +44,21 @@ export const upperBarStyles = StyleSheet.create({
     padding: 5,
     fontFamily: "RobotoMono"
   },
+  // tooltipContainer: {
+  //   position: "relative",
+  //   display: "flex",
+  // },
+  // tooltip: {
+  //   backgroundColor: "deepskyblue",
+  //   textAlign: "center",
+  //   borderRadius: 3,
+  //   padding: 2,
+  //   position: "absolute",
+  //   zIndex: 1,
+  //   top: "150%",
+  //   left: "50%",
+  //   marginLeft: -20,
+  // }
 });
 
 export const hostStyles = StyleSheet.create({
@@ -91,6 +106,7 @@ export const prepStyles = StyleSheet.create({
     ...Platform.select({
       web: {
         flexDirection: "column",
+        marginHorizontal: 20,
       },
       default: {
         flex: 1,
@@ -110,7 +126,7 @@ export const prepStyles = StyleSheet.create({
   pauseButton: {
     ...Platform.select({
       "web": {
-        marginHorizontal: 5,
+        marginHorizontal: 20,
       },
     }),
   },
