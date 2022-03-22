@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import AppLoading from 'expo-app-loading'
 import {StartScreen} from "./pages/StartScreen/StartScreen";
 import {TimerScreen} from "./pages/TimerScreen/TimerScreen";
-import {FormatData, RoomData} from "./interfaces";
+import {BlankFormatData, BlankRoomData, FormatData, RoomData} from "./interfaces";
 import {useFonts} from "expo-font"
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
@@ -25,20 +25,8 @@ const auth = firebase.auth();
 
 export default function App () {
   //region initialize state
-  const [formatData, setFormatData] = useState<FormatData>({
-    format: '',
-    abbreviation: '',
-    prep: 0,
-    sides: ["Proposition", "Opposition"],
-    times: [["Loading", 0]],
-  }); // makes the formatData
-  const [roomData, setRoomData] = useState<RoomData>({
-    code: '',
-    format: '',
-    speechNum: 0,
-    speechTime: 0,
-    prep: [0, 0],
-  });
+  const [formatData, setFormatData] = useState<FormatData>(BlankFormatData); // makes the formatData
+  const [roomData, setRoomData] = useState<RoomData>(BlankRoomData);
   const [room, setRoom] = useState<string>(''); // stores room code
   const [isHost, setHost] = useState(false);
   const [uid, setUid] = useState<string>('');
@@ -58,6 +46,13 @@ export default function App () {
     }
   }
   //endregion
+  const restartApp = () => {
+    setFormatData(BlankFormatData);
+    setRoomData(BlankRoomData);
+    setRoom("");
+    setHost(false);
+    setUid("");
+  };
 
   //region Firebase Auth
   if (uid === '') {
@@ -119,5 +114,5 @@ export default function App () {
 
   // no output if fonts not loaded
   if (room === '') return <StartScreen uid={uid} joinRoom={joinRoom} />;
-  return <TimerScreen isHost={isHost} uid={uid} formatData={formatData} roomData={roomData}/>;
+  return <TimerScreen isHost={isHost} uid={uid} formatData={formatData} roomData={roomData} restartApp={restartApp}/>;
 }

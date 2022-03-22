@@ -44,6 +44,13 @@ export const upperBarStyles = StyleSheet.create({
     padding: 5,
     fontFamily: "RobotoMono"
   },
+  backArrow: {
+    flex: 1,
+    height: 15,
+    aspectRatio: 1,
+    resizeMode: 'contain',
+    paddingHorizontal: 30,
+  }
   // tooltipContainer: {
   //   position: "relative",
   //   display: "flex",

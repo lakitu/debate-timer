@@ -6,9 +6,10 @@ import {Picker} from "@react-native-picker/picker";
 export const SelectStylesDropdown = (props: {selectedFormat:string, setSelectedFormat:(value:string)=>void} ) => {
   const [formats, setFormats] = useState<Array<[string, string]>>([["loading","load"]]);
   useEffect(() => {
+    if (db === undefined) return;
     db.collection("formats").get()
       .then(collection => setFormats( collection.docs.map(doc => [doc.data().format, doc.data().abbreviation]) ));
-  }, []);
+  }, [db]);
 
 
   return (

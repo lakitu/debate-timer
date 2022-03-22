@@ -8,12 +8,12 @@ import HostTools from "./components/HostTools";
 import PrepTimers from "./components/PrepTimers";
 import PrepControls from "./components/PrepControls";
 
-export const TimerScreen = (props: {isHost:boolean, uid:string, formatData:FormatData, roomData:RoomData}) => {
+export const TimerScreen = (props: {isHost:boolean, uid:string, formatData:FormatData, roomData:RoomData, restartApp:()=>void}) => {
   useKeepAwake();
 
   return (
     <View style={{flexDirection: "column"}}>
-      <UpperBar formatName={props.formatData.abbreviation} roomCode={props.roomData.code}/>
+      <UpperBar formatName={props.formatData.abbreviation} roomCode={props.roomData.code} restartApp={props.restartApp}/>
       {props.roomData.code ? <Timer formatData={props.formatData} roomData={props.roomData}/> : null}
       {props.isHost && props.roomData.code ? <HostTools speechTime={props.roomData.speechTime} nextSpeech={nextSpeech(props.uid, props.roomData.code)} pauseSpeech={pauseSpeech(props.uid, props.roomData.code)} /> : null}
       {props.formatData.prep ? <PrepTimers prepTime={props.roomData.prep} sides={props.formatData.sides}/> : null}
