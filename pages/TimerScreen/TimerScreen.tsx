@@ -15,16 +15,16 @@ export const TimerScreen = (props: {isHost:boolean, uid:string, formatData:Forma
     <View style={{flexDirection: "column"}}>
       <UpperBar formatName={props.formatData.abbreviation} roomCode={props.roomData.code} restartApp={props.restartApp}/>
       {props.roomData.code ? <Timer formatData={props.formatData} roomData={props.roomData}/> : null}
-      {props.isHost && props.roomData.code ? <HostTools speechTime={props.roomData.speechTime} nextSpeech={nextSpeech(props.uid, props.roomData.code)} pauseSpeech={pauseSpeech(props.uid, props.roomData.code)} /> : null}
+      {props.isHost && props.roomData.code ? <HostTools speechTime={props.roomData.speechTime} nextSpeech={(next)=>nextSpeech(props.uid,props.roomData.code,next)} pauseSpeech={pauseSpeech(props.uid, props.roomData.code)} /> : null}
       {props.formatData.prep ? <PrepTimers prepTime={props.roomData.prep} sides={props.formatData.sides}/> : null}
       {props.isHost && props.formatData.prep ? <PrepControls prep={props.roomData.prep} togglePrep={togglePrep(props.uid, props.roomData.code)} /> : null}
     </View>
   );
 }
 
-function nextSpeech(uid: string, room: string) {
-  return () => fetch(`https://us-central1-debate-timer-backend.cloudfunctions.net/nextSpeech?uid=${uid}&room=${room}`)
-    .catch(err => console.log("error getting next room", err));
+function nextSpeech(uid: string, room: string, next: number) {
+    fetch(`https://us-central1-debate-timer-backend.cloudfunctions.net/nextSpeech?uid=${uid}&room=${room}&next=${next.toString()}`)
+      .catch(err => console.log("error getting next room", err));
 }
 function pauseSpeech(uid: string, room: string) {
   return () => fetch(`https://us-central1-debate-timer-backend.cloudfunctions.net/togglePause?uid=${uid}&room=${room}`)

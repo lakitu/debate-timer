@@ -17,8 +17,6 @@ export const StartScreen = (props: {uid: string, joinRoom: (room: string, isHost
       .catch(error => console.log(error)); // moves to the timer page
   };
 
-  console.log(roomCode.current)
-
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Live Debate Timer</Text>

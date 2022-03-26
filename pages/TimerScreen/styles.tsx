@@ -80,16 +80,16 @@ export const hostStyles = StyleSheet.create({
     ...Platform.select({
       web: {
         flexDirection: "column",
-        margin: 20,
+        marginHorizontal: 20,
       },
       default: {
         flex: 1,
-        // margin: 0,
       }
     }),
     flexBasis: "auto",
+    borderColor: "black",
     width: 200,
-    height: 150,
+    // height: 150,
   },
   innerText: {
     fontSize: 40,
