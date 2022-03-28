@@ -1,10 +1,9 @@
 import {Image, Pressable, SafeAreaView, Text, View} from "react-native";
 import {upperBarStyles as styles} from "../styles";
-import * as Clipboard from "expo-clipboard";
-import React, {useState} from "react";
+import {setString as setClipboard} from "expo-clipboard";
+import React from "react";
 
 const UpperBar = (props: {formatName: string, roomCode: string, restartApp: ()=>void}) => {
-  const [tooltipVisible, setTooltipVisible] = useState(false);
   return (
     <View>
       <SafeAreaView style={styles.container}>
@@ -14,12 +13,8 @@ const UpperBar = (props: {formatName: string, roomCode: string, restartApp: ()=>
           </Pressable>
           <Text style={styles.text}>{props.formatName}</Text>
         </View>
-        <Pressable onPress={()=> {
-          Clipboard.setString(props.roomCode);
-          setTooltipVisible(true);
-          setTimeout(() => setTooltipVisible(!tooltipVisible), 5000);
-        }}>
-          <Text style={styles.text}>{props.roomCode === '' ? "loading" : props.roomCode}</Text>
+        <Pressable onPress={()=> {setClipboard(props.roomCode);}}>
+          <Text style={styles.text} selectable={true}>{props.roomCode === '' ? "loading" : props.roomCode}</Text>
         </Pressable>
       </SafeAreaView>
     </View>

@@ -19,7 +19,7 @@ const firebaseApp = firebase.initializeApp({
   appId: "1:47969277947:web:8ad910238718c08fa99d5e",
   measurementId: "G-1EEJVY9E3G"
 });
-export const db = firebaseApp.firestore();
+const db = firebaseApp.firestore();
 const auth = firebase.auth();
 //endregion
 
@@ -30,6 +30,7 @@ export default function App () {
   const [room, setRoom] = useState<string>(''); // stores room code
   const [isHost, setHost] = useState(false);
   const [uid, setUid] = useState<string>('');
+  const [formats, setFormats] = useState<[string,string][]>([["Loading","Load"]]);
   const joinRoom = (room: string, isHost: boolean) => {
     setRoom(room);
     if (isHost) setHost(isHost);
@@ -55,12 +56,19 @@ export default function App () {
   };
 
   //region Firebase Auth
-  if (uid === '') {
+  useEffect(() => {
+    if (uid !== "") return;
     auth.signInAnonymously()
       .catch(error => console.log(`Error ${error.code}: ${error.message}`));
     auth.onAuthStateChanged(user => user && setUid(user.uid));
-  }
+  }, [uid])
   //endregion
+  useEffect(() => {
+    db.collection("formats").get()
+      .then(collection => collection.docs.map(doc => [doc.data().format, doc.data().abbreviation] as [string,string]) )
+      .then(unsorted => unsorted.sort((a, b) => a[0].localeCompare(b[0])) )
+      .then(arr => setFormats(arr));
+  }, [db])
   useEffect(() => {
     const RoomDataConverter = {
       toFirestore: (data: RoomData) => data,
@@ -106,13 +114,13 @@ export default function App () {
   //region loading fonts
   const [loaded, error] = useFonts({
     'RobotoMono': require('./assets/fonts/RobotoMono/RobotoMono-VariableFont_wght.ttf'),
-    'Righteous': require('./assets/fonts/Righteous/Righteous-Regular.ttf'),
+    'MontserratAlternate': require('./assets/fonts/Montserrat_Alternates/MontserratAlternates-Regular.ttf'),
   });
   if(error) console.log(error);
   if (!loaded) return <AppLoading />;
   //endregion
 
   // no output if fonts not loaded
-  if (room === '') return <StartScreen uid={uid} joinRoom={joinRoom} />;
+  if (room === '') return <StartScreen uid={uid} joinRoom={joinRoom} formats={formats}/>;
   return <TimerScreen isHost={isHost} uid={uid} formatData={formatData} roomData={roomData} restartApp={restartApp}/>;
 }

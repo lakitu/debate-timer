@@ -1,16 +1,18 @@
-import {Button, View} from "react-native";
+import {Pressable, Text, View} from "react-native";
 import {StartScreenStyles as styles} from "../styles";
 import React from "react";
 
-export const RoomButtons = (props: {setRoom:()=>void, createRoom:()=>void}) => {
-  return (
-    <View style={{paddingTop: 5}}>
-      <View style={styles.inputs}>
-        <Button title={"Join Room"} onPress={props.setRoom} />
-      </View>
-      <View style={styles.inputs}>
-        <Button title={"Create Room"} onPress={props.createRoom} />
-      </View>
-    </View>
-  )
-}
+const textStyle = (pressed:boolean) => pressed ? "gray" : "black";
+
+const RoomButtons = (props: {setRoom:()=>void, createRoom:()=>void}) => (
+  <View style={styles.buttonContainer}>
+    <Pressable style={styles.roomButton} onPress={props.setRoom} children={ ({pressed}) => (
+      <Text style={[styles.buttonText, {color: textStyle(pressed)}]}>Join Room</Text>
+    )} />
+    <Pressable style={styles.roomButton} onPress={props.createRoom} children={ ({pressed}) => (
+      <Text style={[styles.buttonText, {color: textStyle(pressed)}]}>Create Room</Text>
+    )} />
+  </View>
+);
+
+export default RoomButtons;

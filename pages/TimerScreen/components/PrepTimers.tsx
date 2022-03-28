@@ -5,15 +5,15 @@ import {MAX_SPEECH_LENGTH, timeToDisplay} from "../../../interfaces";
 
 const PrepTimers = (props: {prepTime: [number, number], sides: [string, string] }) => {
   return (
-    <View style={[styles.container, {marginTop: 30}]}>
+    <View style={[styles.container, {marginTop: 20}]}>
       { props.prepTime.map((time, i) => {
-        return <PrepTimer key={i} prepTime={time} side={props.sides[i]}/>
+        return <PrepTimer key={i} prepTime={time} side={props.sides[i]} index={i}/>
       }) }
     </View>
   )
 }
 
-const PrepTimer = (props: {prepTime: number, side: string}) => {
+const PrepTimer = (props: {prepTime: number, side: string, index:number}) => {
   const [prepTime, setPrepTime] = useState("");
   
   useEffect(() => {
@@ -32,7 +32,7 @@ const PrepTimer = (props: {prepTime: number, side: string}) => {
   }, [props.prepTime]);
   
   return (
-    <View style={styles.sideContainer} >
+    <View style={[styles.sideContainer]} >
       <Text style={styles.sideName}>{props.side}</Text>
       <Text style={styles.timer}>{prepTime}</Text>
     </View>

@@ -25,6 +25,7 @@ export const timerStyles = StyleSheet.create({
     color: "green",
   },
   speechName: {
+    fontFamily: "MontserratAlternate",
     fontWeight: 'bold',
     textAlign: "center",
     fontSize: 40,
@@ -51,21 +52,6 @@ export const upperBarStyles = StyleSheet.create({
     resizeMode: 'contain',
     paddingHorizontal: 30,
   }
-  // tooltipContainer: {
-  //   position: "relative",
-  //   display: "flex",
-  // },
-  // tooltip: {
-  //   backgroundColor: "deepskyblue",
-  //   textAlign: "center",
-  //   borderRadius: 3,
-  //   padding: 2,
-  //   position: "absolute",
-  //   zIndex: 1,
-  //   top: "150%",
-  //   left: "50%",
-  //   marginLeft: -20,
-  // }
 });
 
 export const hostStyles = StyleSheet.create({
@@ -80,7 +66,9 @@ export const hostStyles = StyleSheet.create({
     ...Platform.select({
       web: {
         flexDirection: "column",
-        marginHorizontal: 20,
+        paddingHorizontal: 20,
+        width: 200,
+        height: 75,
       },
       default: {
         flex: 1,
@@ -88,14 +76,24 @@ export const hostStyles = StyleSheet.create({
     }),
     flexBasis: "auto",
     borderColor: "black",
-    width: 200,
-    // height: 150,
+  },
+  sides: {
+    height: 150,
+    // flex: 1,
+    ...Platform.select({
+      web: {
+        width: 200,
+      },
+      default: {
+        flex: 1,
+      }
+    }),
   },
   innerText: {
+    fontFamily: "MontserratAlternate",
     fontSize: 40,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: 'rgb(40, 40, 40)',
     padding: 10,
   }
 });
@@ -105,6 +103,7 @@ export const prepStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
+    marginTop: 10,
   },
   sideContainer: {
     alignItems: "center",
@@ -123,7 +122,7 @@ export const prepStyles = StyleSheet.create({
     width: 200,
   },
   sideName: {
-    fontFamily: "Righteous",
+    fontFamily: "MontserratAlternate",
     fontSize: 30,
   },
   timer: {
@@ -138,8 +137,9 @@ export const prepStyles = StyleSheet.create({
     }),
   },
   pauseButtonText: {
-    fontFamily: "RobotoMono",
-    fontSize: 20,
+    fontFamily: "MontserratAlternate",
+    fontSize: 25,
     padding: 5,
+    // fontWeight: "bold",
   },
 });

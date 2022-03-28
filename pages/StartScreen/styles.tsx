@@ -19,11 +19,25 @@ export const StartScreenStyles = StyleSheet.create({
         backgroundColor: "gainsboro",
         padding: 5,
         marginBottom: 5,
+        fontFamily: "MontserratAlternate"
     },
-    inputs: {
-        padding: 3,
+    buttonContainer: {
+        margin: 5,
+        flexDirection: "row",
+    },
+    roomButton: {
+        padding: 6,
+        margin: 4,
+        alignItems: "center",
+    },
+    buttonText: {
+        fontFamily: "MontserratAlternate",
+        fontSize: 20,
     },
     dropdown: {
         width: Platform.OS === "web" ? 300 : "100%",
+    },
+    options: {
+        fontFamily: "MontserratAlternate",
     }
 })

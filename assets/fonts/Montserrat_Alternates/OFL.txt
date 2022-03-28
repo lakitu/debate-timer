@@ -1,5 +1,4 @@
-Copyright (c) 2011 by Brian J. Bonislawsky DBA Astigmatic (AOETI)
-(astigma@astigmatic.com), with Reserved Font Names "Righteous"
+Copyright 2011 The Montserrat Project Authors (https://github.com/JulietaUla/Montserrat)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
