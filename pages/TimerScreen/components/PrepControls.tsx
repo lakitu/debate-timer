@@ -1,11 +1,11 @@
 import React from "react";
-import {View, Text, Pressable} from "react-native"
+import {View, Text, Pressable, Platform} from "react-native"
 import {MAX_SPEECH_LENGTH} from "../../../interfaces";
 import {prepStyles as styles} from "../styles";
 
 const PrepControls = (props: {prep: [number, number], togglePrep:(side:number)=>void}) => {
   const paused = props.prep.map((v) => v < MAX_SPEECH_LENGTH); // if paused, true. if playing, false
-  const buttonStyles = (paused:boolean, pressed:boolean) => {
+  const buttonColor = (paused:boolean, pressed:boolean) => {
     if (!paused) { // playing
       if (!pressed) return "#F33"; // playing and pressed
       return "#FA8072"; // playing but not pressed
@@ -17,13 +17,13 @@ const PrepControls = (props: {prep: [number, number], togglePrep:(side:number)=>
     return i === 0 ? "borderRightWidth" : "borderLeftWidth";
   }
   return (
-    <View style={[styles.container, styles.pauseButton]} >
+    <View style={[styles.container]} >
       {
         paused.map((v, i) => {
           return (
             <Pressable key={i} onPress={()=>props.togglePrep(i)}
-                       style={({pressed}) => [styles.sideContainer, styles.pauseButton,
-                         {backgroundColor: buttonStyles(v, pressed), borderColor:"black", [borderProperty(i)]: 1} ]}
+                       style={({pressed}) => [styles.sideContainer,
+                         {backgroundColor: buttonColor(v, pressed), borderColor:"black", [borderProperty(i)]: 1} ]}
             >
               <Text style={styles.pauseButtonText}>{paused[i]?"Play":"Pause"}</Text>
             </Pressable>

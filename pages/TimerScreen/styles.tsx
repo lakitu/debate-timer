@@ -1,4 +1,4 @@
-import {StyleSheet, Platform} from "react-native";
+import {StyleSheet, Platform, StatusBar} from "react-native";
 
 export const timerStyles = StyleSheet.create({
   container: {
@@ -11,7 +11,8 @@ export const timerStyles = StyleSheet.create({
     backgroundColor: '#d0d0c0',
   },
   count: {
-    fontSize: 50,
+    fontSize: 60,
+    paddingVertical: 10,
     fontWeight: 'bold',
     fontFamily: "RobotoMono",
   },
@@ -38,6 +39,7 @@ export const upperBarStyles = StyleSheet.create({
     marginBottom: 20,
     flexDirection: "row",
     justifyContent: "space-between",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   text: {
     color: 'white',
@@ -63,31 +65,15 @@ export const hostStyles = StyleSheet.create({
   button: {
     alignItems: "center",
     justifyContent: "center",
-    ...Platform.select({
-      web: {
-        flexDirection: "column",
-        paddingHorizontal: 20,
-        width: 200,
-        height: 75,
-      },
-      default: {
-        flex: 1,
-      }
-    }),
+    flex: 1,
     flexBasis: "auto",
     borderColor: "black",
   },
   sides: {
     height: 150,
-    // flex: 1,
-    ...Platform.select({
-      web: {
-        width: 200,
-      },
-      default: {
-        flex: 1,
-      }
-    }),
+    flexGrow: 1,
+    maxWidth: 200,
+    flexBasis: "50%",
   },
   innerText: {
     fontFamily: "MontserratAlternate",
@@ -109,17 +95,9 @@ export const prepStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 5,
-    ...Platform.select({
-      web: {
-        flexDirection: "column",
-        marginHorizontal: 20,
-      },
-      default: {
-        flex: 1,
-      },
-    }), // web specific features
-    flexBasis: "auto",
-    width: 200,
+    flexGrow: 1,
+    maxWidth: 200,
+    flexBasis: "50%",
   },
   sideName: {
     fontFamily: "MontserratAlternate",
@@ -129,17 +107,9 @@ export const prepStyles = StyleSheet.create({
     fontFamily: "RobotoMono",
     fontSize: 30,
   },
-  pauseButton: {
-    ...Platform.select({
-      "web": {
-        marginHorizontal: 20,
-      },
-    }),
-  },
   pauseButtonText: {
     fontFamily: "MontserratAlternate",
     fontSize: 25,
     padding: 5,
-    // fontWeight: "bold",
   },
 });

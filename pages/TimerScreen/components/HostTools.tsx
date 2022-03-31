@@ -17,11 +17,13 @@ const HostTools = (props: {pauseSpeech:(action:string)=>void, nextSpeech:(next:n
   return (
     <View style={[styles.wrapperCustom]}>
       {/*Pause Button*/}
-      <Pressable onPress={()=>props.pauseSpeech(paused?"play":"pause")} style={({pressed}) => [styles.button, styles.sides, {backgroundColor: pauseColor(pressed), borderRightWidth:1}]}>
-        <Text style={styles.innerText}>
-          {(paused ? "Play" : "Pause")}
-        </Text>
-      </Pressable>
+      <View style={[styles.sides]}>
+        <Pressable onPress={()=>props.pauseSpeech(paused?"play":"pause")} style={({pressed}) => [styles.button, {backgroundColor: pauseColor(pressed), borderRightWidth:1}]}>
+          <Text style={styles.innerText}>
+            {(paused ? "Play" : "Pause")}
+          </Text>
+        </Pressable>
+      </View>
       {/*Next and Previous Speech*/}
       <View style={[styles.sides, {borderLeftWidth:1}]}>
         {/*Next Speech*/}

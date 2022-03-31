@@ -23,6 +23,12 @@ const db = firebaseApp.firestore();
 const auth = firebase.auth();
 //endregion
 
+//TODO: Set up grace period
+//TODO: Fix spacing issue on upper bar on my phone
+//TODO: Feature to edit times
+//TODO: Create special link for app
+//TODO: Set up sharing to go directly to app
+//TODO: Add non-anonymous login
 export default function App () {
   //region initialize state
   const [formatData, setFormatData] = useState<FormatData>(BlankFormatData); // makes the formatData

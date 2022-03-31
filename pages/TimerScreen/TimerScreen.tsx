@@ -1,7 +1,6 @@
 import React from 'react'
-import {FormatData, RoomData} from '../../interfaces'
+import {FormatData, MAX_SPEECH_LENGTH, RoomData} from '../../interfaces'
 import {View} from "react-native";
-import {useKeepAwake} from "expo-keep-awake";
 import Timer from "./components/Timer";
 import UpperBar from "./components/UpperBar";
 import HostTools from "./components/HostTools";
@@ -9,7 +8,7 @@ import PrepTimers from "./components/PrepTimers";
 import PrepControls from "./components/PrepControls";
 
 export const TimerScreen = (props: {isHost:boolean, uid:string, formatData:FormatData, roomData:RoomData, restartApp:()=>void}) => {
-  useKeepAwake();
+  //region functions to interface with firebase
   const nextSpeech = (next: number) => {
     fetch(`https://us-central1-debate-timer-backend.cloudfunctions.net/nextSpeech?uid=${props.uid}&room=${props.roomData.code}&next=${(next+props.roomData.speechNum).toString()}`)
       .catch(err => console.log("error getting next room", err));
@@ -25,6 +24,7 @@ export const TimerScreen = (props: {isHost:boolean, uid:string, formatData:Forma
         .catch(err => console.log(err));
     }
   }
+  //endregion
 
   return (
     <View style={{flexDirection: "column"}}>
@@ -42,4 +42,17 @@ export const TimerScreen = (props: {isHost:boolean, uid:string, formatData:Forma
       {props.isHost && props.formatData.prep ? <PrepControls prep={props.roomData.prep} togglePrep={togglePrep(props.uid, props.roomData.code)} /> : null}
     </View>
   );
+}
+
+export function timeToDisplay(speechTime: number, grace?: number): string {
+  // if speechTime > MAX_SPEECH_LENGTH, it's playing, so find the elapsed time between the end and now. If it's paused, just return the current time remaining
+  let time = (speechTime > MAX_SPEECH_LENGTH ? speechTime - Date.now() : speechTime);
+  if (time <= 0 && grace === undefined) return "0:00.0";
+  time = Math.abs(time);
+  const actualSeconds = time / 1000;
+  const minutes = Math.floor(actualSeconds / 60);
+  const seconds = Math.floor(actualSeconds % 60);
+  const displaySeconds = ("0" + (String)(seconds)).slice(-2); // gets final two digits in the string
+  const tenths = Math.floor((time / 100) % 10);
+  return (minutes + ":" + displaySeconds + "." + tenths);
 }

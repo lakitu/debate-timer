@@ -36,8 +36,10 @@ export const StartScreenStyles = StyleSheet.create({
     },
     dropdown: {
         width: Platform.OS === "web" ? 300 : "100%",
+        height: Platform.OS === "web" ? 30 : undefined,
     },
-    options: {
-        fontFamily: "MontserratAlternate",
-    }
-})
+    // options: {
+    //     fontFamily: "MontserratAlternate",
+    //     color: "red",
+    // }
+});
