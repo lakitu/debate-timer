@@ -44,15 +44,19 @@ export const TimerScreen = (props: {isHost:boolean, uid:string, formatData:Forma
   );
 }
 
-export function timeToDisplay(speechTime: number, grace?: number): string {
+export function timeToDisplay(speechTime: number, grace?: number|undefined): string {
   // if speechTime > MAX_SPEECH_LENGTH, it's playing, so find the elapsed time between the end and now. If it's paused, just return the current time remaining
   let time = (speechTime > MAX_SPEECH_LENGTH ? speechTime - Date.now() : speechTime);
-  if (time <= 0 && grace === undefined) return "0:00.0";
+  if (time <= 0) {
+    if (grace === undefined) return "0:00.0";
+    if (time < -grace * 1000) return `-0:${grace}.0`;
+  }
+  const sign = time > 0 ? "" : "-";
   time = Math.abs(time);
   const actualSeconds = time / 1000;
   const minutes = Math.floor(actualSeconds / 60);
   const seconds = Math.floor(actualSeconds % 60);
   const displaySeconds = ("0" + (String)(seconds)).slice(-2); // gets final two digits in the string
   const tenths = Math.floor((time / 100) % 10);
-  return (minutes + ":" + displaySeconds + "." + tenths);
+  return (sign + minutes + ":" + displaySeconds + "." + tenths);
 }

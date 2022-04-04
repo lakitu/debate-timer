@@ -18,12 +18,12 @@ const PrepTimer = (props: {prepTime: number, side: string, index:number}) => {
   const [prepTime, setPrepTime] = useState("");
   
   useEffect(() => {
-    setPrepTime( timeToDisplay(props.prepTime, false).slice(0, -2) );
+    setPrepTime( timeToDisplay(props.prepTime, undefined).slice(0, -2) );
     if (props.prepTime < MAX_SPEECH_LENGTH) {
       return;
     }
     const tick = setInterval(() => {
-      const newPrepTime = timeToDisplay(props.prepTime, false).slice(0, -2);
+      const newPrepTime = timeToDisplay(props.prepTime, undefined).slice(0, -2);
       setPrepTime( newPrepTime );
       if (newPrepTime.substr(-2, 2) === "00") {
         Vibration.vibrate();

@@ -12,12 +12,12 @@ const Timer = (props: {formatData: FormatData, roomData: RoomData}) => {
   const [onTime, setOnTime] = useState(Date.now());
 
   useEffect(() => {
-    setDisplayTime(timeToDisplay(props.roomData.speechTime, true));
+    setDisplayTime(timeToDisplay(props.roomData.speechTime, props.formatData.grace));
     if (props.roomData.speechTime <= MAX_SPEECH_LENGTH) return; // if paused, don't do an interval
     const interval = setInterval(() => {
-      const newDisplayTime = timeToDisplay(props.roomData.speechTime, true);
+      const newDisplayTime = timeToDisplay(props.roomData.speechTime, props.formatData.grace);
       setDisplayTime(newDisplayTime);
-      if (newDisplayTime === "0:00.0" && willVibrate) {
+      if (newDisplayTime === `${props.formatData.grace?"-":""}0:${props.formatData.grace ?? "00"}.0` && willVibrate) {
         Vibration.vibrate(Array(5).fill(1000));
         clearInterval(interval);
         setWillVibrate(false);
@@ -28,8 +28,11 @@ const Timer = (props: {formatData: FormatData, roomData: RoomData}) => {
     };
   }, [props.roomData]);
   useEffect(() => {
-    setTimeout(() => setTick(!tick), 500);
+    const tickInterval = setTimeout(() => setTick(!tick), 500);
     if (Date.now() - 20*60*1000 > onTime) deactivateKeepAwake();
+    return () => {
+      clearInterval(tickInterval);
+    }
   }, [tick])
   useEffect(() => {
     setWillVibrate(true);
@@ -38,10 +41,12 @@ const Timer = (props: {formatData: FormatData, roomData: RoomData}) => {
     activateKeepAwake();
   }, [props.roomData.speechNum]);
 
+  const displaySpeech = !(props.roomData.code === '' || props.formatData.times.length === 1);
+  const flashText = tick && displayTime.includes(`${props.formatData.grace?"-":""}0:${props.formatData.grace??"00"}.0`) && props.roomData.speechTime > MAX_SPEECH_LENGTH;
   return (
     <View style={[styles.container]}>
-      <Text style={[styles.speechName]}> {(props.roomData.code === '' || props.formatData.times.length === 1) ? "" : props.formatData.times[props.roomData.speechNum][0]} </Text>
-      <Text style={[styles.count, (tick && displayTime.charAt(0) === "-") ? styles.finishedRed : styles.finishedBlack]}> {displayTime} </Text>
+      <Text style={[styles.speechName]}> {displaySpeech && props.formatData.times[props.roomData.speechNum][0]} </Text>
+      <Text style={[styles.count, flashText ? styles.finishedRed : styles.finishedBlack]}> {displayTime} </Text>
     </View>
   );
 }

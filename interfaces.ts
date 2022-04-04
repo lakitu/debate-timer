@@ -31,4 +31,4 @@ export const BlankRoomData:RoomData = {
   prep: [0, 0],
 }
 
-export const MAX_SPEECH_LENGTH = 30 * 60 * 1000;
+export const MAX_SPEECH_LENGTH = 60 * 60 * 1000;
