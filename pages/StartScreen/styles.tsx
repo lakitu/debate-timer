@@ -33,6 +33,7 @@ export const StartScreenStyles = StyleSheet.create({
     buttonText: {
         fontFamily: "MontserratAlternate",
         fontSize: 20,
+        textDecorationLine: "underline"
     },
     dropdown: {
         width: Platform.OS === "web" ? 300 : "100%",

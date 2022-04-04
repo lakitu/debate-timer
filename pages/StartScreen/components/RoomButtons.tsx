@@ -2,7 +2,7 @@ import {Pressable, Text, View} from "react-native";
 import {StartScreenStyles as styles} from "../styles";
 import React from "react";
 
-const textStyle = (pressed:boolean) => pressed ? "gray" : "black";
+const textStyle = (pressed:boolean) => pressed ? "gray" : "blue";
 
 const RoomButtons = (props: {setRoom:()=>void, createRoom:()=>void}) => (
   <View style={styles.buttonContainer}>
