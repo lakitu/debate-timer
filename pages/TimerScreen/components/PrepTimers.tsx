@@ -1,18 +1,14 @@
 import React, {useEffect, useState} from "react"
 import {View, Text, Vibration} from "react-native"
 import {prepStyles as styles} from "../styles"
-import {MAX_SPEECH_LENGTH} from "../../../interfaces";
-import {timeToDisplay} from "../TimerScreen";
+import {MAX_SPEECH_LENGTH, timeToDisplay} from "../../../interfaces";
 
-const PrepTimers = (props: {prepTime: [number, number], sides: [string, string] }) => {
-  return (
-    <View style={[styles.container, {marginTop: 20}]}>
-      { props.prepTime.map((time, i) => {
-        return <PrepTimer key={i} prepTime={time} side={props.sides[i]} index={i}/>
-      }) }
-    </View>
-  )
-}
+const PrepTimers = (props: {prepTime: [number, number], sides: [string, string] }) => (
+  <View style={[styles.container, {marginTop: 20}]}>
+    { props.prepTime.map((time, i) =>
+      <PrepTimer key={i} prepTime={time} side={props.sides[i]} index={i}/> ) }
+  </View>
+);
 
 const PrepTimer = (props: {prepTime: number, side: string, index:number}) => {
   const [prepTime, setPrepTime] = useState("");

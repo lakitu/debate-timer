@@ -22,10 +22,10 @@ const firebaseApp = firebase.initializeApp({
 const db = firebaseApp.firestore();
 const auth = firebase.auth();
 //endregion
+export let offline = false;
 
-//TODO: Set up grace period
-//TODO: Fix spacing issue on upper bar on my phone
 //TODO: Feature to edit times
+//TODO: Offline app features
 //TODO: Create special link for app
 //TODO: Set up sharing to go directly to app
 //TODO: Add non-anonymous login

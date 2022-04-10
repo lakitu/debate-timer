@@ -12,9 +12,12 @@ export const timerStyles = StyleSheet.create({
   },
   count: {
     fontSize: 60,
+    // height: 60,
     paddingVertical: 10,
     fontWeight: 'bold',
     fontFamily: "RobotoMono",
+    textAlign: "center",
+    // flexShrink: 1,
   },
   finishedRed: {
     color: 'red',

@@ -19,7 +19,7 @@ const HostTools = (props: {pauseSpeech:(action:string)=>void, nextSpeech:(next:n
       {/*Pause Button*/}
       <View style={[styles.sides]}>
         <Pressable onPress={()=>props.pauseSpeech(paused?"play":"pause")} style={({pressed}) => [styles.button, {backgroundColor: pauseColor(pressed), borderRightWidth:1}]}>
-          <Text style={styles.innerText}>
+          <Text style={styles.innerText} selectable={false}>
             {(paused ? "Play" : "Pause")}
           </Text>
         </Pressable>
@@ -43,7 +43,7 @@ function ChangeSpeechButton (props: { nextSpeech:(dir:number)=>void, direction:n
   return <Pressable onPress={()=>props.nextSpeech(props.direction)}
              style={({pressed}) => [styles.button, {backgroundColor: nextColor(pressed), [borderSide]: 1}]}
              children={({pressed}) => (
-               <Text style={[styles.innerText, {color:nextTextColor(pressed)}]}>{props.direction===1?"Next":"Prev"}</Text>
+               <Text style={[styles.innerText, {color:nextTextColor(pressed)}]} selectable={false}>{props.direction===1?"Next":"Prev"}</Text>
              )}
   />;
 }

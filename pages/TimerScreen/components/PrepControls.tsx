@@ -25,13 +25,13 @@ const PrepControls = (props: {prep: [number, number], togglePrep:(side:number)=>
                        style={({pressed}) => [styles.sideContainer,
                          {backgroundColor: buttonColor(v, pressed), borderColor:"black", [borderProperty(i)]: 1} ]}
             >
-              <Text style={styles.pauseButtonText}>{paused[i]?"Play":"Pause"}</Text>
+              <Text style={styles.pauseButtonText} selectable={false} >{paused[i]?"Play":"Pause"}</Text>
             </Pressable>
           )
         })
       }
     </View>
-  )
-}
+  );
+};
 
 export default PrepControls;
