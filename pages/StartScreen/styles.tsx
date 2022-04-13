@@ -39,8 +39,16 @@ export const StartScreenStyles = StyleSheet.create({
         width: Platform.OS === "web" ? 300 : "100%",
         height: Platform.OS === "web" ? 30 : undefined,
     },
-    // options: {
-    //     fontFamily: "MontserratAlternate",
-    //     color: "red",
-    // }
+})
+
+export const OfflineToggleStyles = StyleSheet.create({
+    container: {
+        display: "flex",
+        flexDirection: "row",
+        padding: 5,
+    },
+    text: {
+        fontFamily: "RobotoMono",
+        padding: 5,
+    }
 });

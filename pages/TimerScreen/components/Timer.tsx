@@ -5,11 +5,13 @@ import {timerStyles as styles} from "../styles";
 import {activateKeepAwake, deactivateKeepAwake} from "expo-keep-awake";
 
 const Timer = (props: {formatData: FormatData, roomData: RoomData, isHost: boolean, setTime:(mins:string,secs:string,tens:string)=>void}) => {
+  //region initializing state
   const [displayTime, setDisplayTime] = useState("");
   const [paused, setPause] = useState(true);
   const [willVibrate, setWillVibrate] = useState(true);
   const [tick, setTick] = useState(false);
   const [onTime, setOnTime] = useState(Date.now());
+  //endregion
 
   useEffect(() => {
     setDisplayTime(timeToDisplay(props.roomData.speechTime, props.formatData.grace));
@@ -41,13 +43,18 @@ const Timer = (props: {formatData: FormatData, roomData: RoomData, isHost: boole
     setTick(false);
     setOnTime(Date.now());
     activateKeepAwake();
+    return () => {
+      deactivateKeepAwake();
+    }
   }, [props.roomData.speechNum]);
 
   if (displayTime === undefined || displayTime === "") return null;
 
+  // region special styles
   const displaySpeech = !(props.roomData.code === '' || props.formatData.times.length === 1);
   const flashText = tick && !paused && displayTime.includes(`${props.formatData.grace?"-":""}0:${props.formatData.grace??"00"}.0`);
   const textStyle = [styles.count, flashText ? styles.finishedRed : styles.finishedBlack];
+  // endregion
   return (
     <View style={[styles.container]}>
       <Text style={[styles.speechName]}> {displaySpeech && props.formatData.times[props.roomData.speechNum][0]} </Text>
@@ -72,22 +79,22 @@ function EditableTime(props: {displayTime:string, textStyle: Array<Object>, paus
   return (
     <View style={{"flexDirection":"row",alignItems:"center",}}>
       {/*Minutes*/}
-      <TextInput style={[props.textStyle, {maxWidth:minutes.length*37,textAlign:"right"}]}
+      <TextInput style={[props.textStyle, {maxWidth:minutes.length*36.5,textAlign:"right"}]}
                  value={minutes} editable={props.paused} maxLength={2}
                  onChangeText={(newMinutes)=>setMinutes(newMinutes.replace(/[^0-9]/g, ''))}
                  onBlur={setTime} keyboardType={"number-pad"}/>
 
-      <Text style={[props.textStyle, {padding:-2}]} selectable={false}>:</Text>
+      <Text style={[props.textStyle]} selectable={false}>:</Text>
 
       {/*Seconds*/}
-      <TextInput style={[props.textStyle, {maxWidth:74,textAlign:"center",}]}
+      <TextInput style={[props.textStyle, {maxWidth:73,textAlign:"center",}]}
                  value={seconds} editable={props.paused} maxLength={2}
                  onChangeText={(newSeconds)=>setSeconds(newSeconds.replace(/[^0-9]/g, ''))}
                  onBlur={setTime} keyboardType={"number-pad"}/>
-      <Text style={[props.textStyle, {padding: -2}]} selectable={false}>.</Text>
+      <Text style={[props.textStyle]} selectable={false}>.</Text>
 
       {/*Tenths*/}
-      <TextInput style={[props.textStyle, {maxWidth:37,textAlign:"left"}]}
+      <TextInput style={[props.textStyle, {maxWidth:36,textAlign:"left"}]}
                  value={tenths} editable={props.paused} maxLength={1}
                  onChangeText={(newTenths)=>setTenths(newTenths.replace(/[^0-9]/g, ''))}
                  onBlur={setTime} keyboardType={"number-pad"}/>

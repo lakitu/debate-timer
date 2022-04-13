@@ -24,11 +24,11 @@ const auth = firebase.auth();
 //endregion
 export let offline = false;
 
-//TODO: Feature to edit times
-//TODO: Offline app features
-//TODO: Create special link for app
-//TODO: Set up sharing to go directly to app
-//TODO: Add non-anonymous login
+// TODO: Custom times (big project)
+// TODO: Dark mode
+// TODO: Create special link for app
+// TODO: Set up sharing to go directly to app
+// TODO: Add non-anonymous login
 export default function App () {
   //region initialize state
   const [formatData, setFormatData] = useState<FormatData>(BlankFormatData); // makes the formatData
@@ -37,9 +37,15 @@ export default function App () {
   const [isHost, setHost] = useState(false);
   const [uid, setUid] = useState<string>('');
   const [formats, setFormats] = useState<[string,string][]>([["Loading","Load"]]);
+  const [offline, setOffline] = useState(false);
+  //endregion
   const joinRoom = (room: string, isHost: boolean) => {
     setRoom(room);
     if (isHost) setHost(isHost);
+    if (room.toLowerCase().includes("offline")) {
+      setOffline(true);
+      return;
+    }
     else {
       fetch(`https://us-central1-debate-timer-backend.cloudfunctions.net/checkHost?uid=${uid}&room=${room}`)
         .then((res) => res.json())
@@ -52,7 +58,6 @@ export default function App () {
         });
     }
   }
-  //endregion
   const restartApp = () => {
     setFormatData(BlankFormatData);
     setRoomData(BlankRoomData);
@@ -61,20 +66,13 @@ export default function App () {
     setUid("");
   };
 
-  //region Firebase Auth
+  // region firebase
   useEffect(() => {
     if (uid !== "") return;
     auth.signInAnonymously()
       .catch(error => console.log(`Error ${error.code}: ${error.message}`));
     auth.onAuthStateChanged(user => user && setUid(user.uid));
-  }, [uid])
-  //endregion
-  useEffect(() => {
-    db.collection("formats").get()
-      .then(collection => collection.docs.map(doc => [doc.data().format, doc.data().abbreviation] as [string,string]) )
-      .then(unsorted => unsorted.sort((a, b) => a[0].localeCompare(b[0])) )
-      .then(arr => setFormats(arr));
-  }, [db])
+  }, [uid]); // auth
   useEffect(() => {
     const RoomDataConverter = {
       toFirestore: (data: RoomData) => data,
@@ -93,6 +91,25 @@ export default function App () {
     if (room !== '' && roomData.code === '') { //TODO: add promise function functionality so code reruns if bad data is received
       (async () => {
         // region initialData
+        if (room.toLowerCase().includes("offline") && room.length >= 7) {
+          const formatCode = room.toLowerCase().split("offline")[1];
+          let tempFormatData = require("./assets/formats.json")[formatCode];
+          tempFormatData.times = Object.entries(tempFormatData.times) // gets an array of times (ex [arraya, [1AC, 4]])
+            .sort((a, b) => a[0].localeCompare(b[0])) // sort the array by key name (so arraya goes before arrayb)
+            .map(val => val[1]); // return only the values (so get rid of the arraya thing, keep only [1AC, 4])
+          delete tempFormatData.__collections__
+
+          const tempRoomData: RoomData = {
+            code: "OFFLINE",
+            format: formatCode,
+            speechNum: 0,
+            speechTime: tempFormatData.times[0][1] * 60 * 1000,
+            prep: [tempFormatData.prep * 60 * 1000, tempFormatData.prep * 60 * 1000],
+          }
+          setRoomData(tempRoomData);
+          setFormatData(tempFormatData);
+          return;
+        }
         const roomSnapshot = await db.doc(`/rooms/${room}`).withConverter(RoomDataConverter).get();
         const tempRoomData = roomSnapshot.data() as RoomData;
         if (typeof(tempRoomData) === "undefined") {
@@ -116,6 +133,25 @@ export default function App () {
       })();
     }
   }, [room]); // firestore updates and initial data
+  // endregion
+  //region set format values
+  useEffect(() => {
+    if (formats.length > 1) return;
+    db.collection("formats").get()
+      .then(collection => collection.docs.map(doc => [doc.data().format, doc.data().abbreviation] as [string,string]) )
+      .then(unsorted => unsorted.sort((a, b) => a[0].localeCompare(b[0])) )
+      .then(arr => setFormats(arr));
+  }, [db]);
+  useEffect(() => { // if offline, set the formats like this
+    if (formats.length > 1) return;
+    if (offline) {
+      const docs = Object.values(require("./assets/formats.json") as {[key:string]:FormatData})
+        .map(doc => [doc.format, doc.abbreviation] as [string,string])
+        .sort((a, b) => a[0].localeCompare(b[0]))
+      setFormats(docs);
+    }
+  }, [offline]);
+  // endregion
 
   //region loading fonts
   const [loaded, error] = useFonts({
@@ -127,6 +163,6 @@ export default function App () {
   //endregion
 
   // no output if fonts not loaded
-  if (room === '') return <StartScreen uid={uid} joinRoom={joinRoom} formats={formats}/>;
-  return <TimerScreen isHost={isHost} uid={uid} formatData={formatData} roomData={roomData} restartApp={restartApp}/>;
+  if (room === '') return <StartScreen uid={uid} joinRoom={joinRoom} formats={formats} offline={offline} setOffline={setOffline}/>;
+  return <TimerScreen isHost={isHost} uid={uid} formatData={formatData} roomData={roomData} restartApp={restartApp} setRoomData={setRoomData}/>;
 }
