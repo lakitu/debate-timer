@@ -45,7 +45,8 @@ export function timeToDisplay(speechTime: number, grace?: number | undefined): s
   const actualSeconds = time / 1000;
   const minutes = Math.floor(actualSeconds / 60);
   const seconds = Math.floor(actualSeconds % 60);
-  const displaySeconds = ("0" + (String)(seconds)).slice(-2); // gets final two digits in the string
+  const displaySeconds = (String)(seconds).padStart(2, "0");
+  // const displaySeconds = ("0" + (String)(seconds)).slice(-2); // gets final two digits in the string
   const tenths = Math.floor((time / 100) % 10);
   return (sign + minutes + ":" + displaySeconds + "." + tenths);
 }

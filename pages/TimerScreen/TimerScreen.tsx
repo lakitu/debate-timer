@@ -7,7 +7,7 @@ import HostTools from "./components/HostTools";
 import PrepTimers from "./components/PrepTimers";
 import PrepControls from "./components/PrepControls";
 
-export const TimerScreen = (props: {isHost:boolean, uid:string, formatData:FormatData, roomData:RoomData, restartApp:()=>void, setRoomData:(newRoomData:RoomData)=>void}) => {
+const TimerScreen = (props: {isHost:boolean, uid:string, formatData:FormatData, roomData:RoomData, restartApp:()=>void, setRoomData:(newRoomData:RoomData)=>void}) => {
   //region functions to interface with firebase
   const nextSpeech = (next: number) => {
     if (props.roomData.code === "OFFLINE") {
@@ -102,3 +102,5 @@ function pauseAll(roomData:RoomData):RoomData {
   if (roomData.speechTime > MAX_SPEECH_LENGTH) newRoomData.speechTime -= Date.now();
   return newRoomData;
 }
+
+export default TimerScreen;

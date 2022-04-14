@@ -1,16 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import AppLoading from 'expo-app-loading'
-import {StartScreen} from "./pages/StartScreen/StartScreen";
-import {TimerScreen} from "./pages/TimerScreen/TimerScreen";
+import React, {useEffect, useState, Suspense} from 'react';
+const StartScreen = React.lazy(() => import("./pages/StartScreen/StartScreen"));
+const TimerScreen = React.lazy(() => import("./pages/TimerScreen/TimerScreen"));
 import {BlankFormatData, BlankRoomData, FormatData, RoomData} from "./interfaces";
 import {useFonts} from "expo-font"
-import firebase from 'firebase/compat/app'
-import 'firebase/compat/auth'
-import 'firebase/compat/firestore'
-import QueryDocumentSnapshot = firebase.firestore.QueryDocumentSnapshot;
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, doc, getDoc, onSnapshot, QueryDocumentSnapshot, getDocs } from "firebase/firestore"
+import { getAuth, signInAnonymously } from "firebase/auth/";
+import AppLoadingPlaceholder from "expo/build/launch/AppLoadingPlaceholder";
 
 //region Firebase Config
-const firebaseApp = firebase.initializeApp({
+const firebaseApp = initializeApp({
   apiKey: "AIzaSyBkTDE1G6uNZ--DPdI2PnGbez5Q3KqkpdA",
   authDomain: "debate-timer-backend.firebaseapp.com",
   projectId: "debate-timer-backend",
@@ -19,8 +18,8 @@ const firebaseApp = firebase.initializeApp({
   appId: "1:47969277947:web:8ad910238718c08fa99d5e",
   measurementId: "G-1EEJVY9E3G"
 });
-const db = firebaseApp.firestore();
-const auth = firebase.auth();
+const db = getFirestore(firebaseApp);
+const auth = getAuth(firebaseApp);
 //endregion
 export let offline = false;
 
@@ -69,7 +68,7 @@ export default function App () {
   // region firebase
   useEffect(() => {
     if (uid !== "") return;
-    auth.signInAnonymously()
+    signInAnonymously(auth)
       .catch(error => console.log(`Error ${error.code}: ${error.message}`));
     auth.onAuthStateChanged(user => user && setUid(user.uid));
   }, [uid]); // auth
@@ -110,13 +109,15 @@ export default function App () {
           setFormatData(tempFormatData);
           return;
         }
-        const roomSnapshot = await db.doc(`/rooms/${room}`).withConverter(RoomDataConverter).get();
+        const roomDoc = doc(db, "rooms", room).withConverter(RoomDataConverter);
+        const roomSnapshot = await getDoc(roomDoc);
         const tempRoomData = roomSnapshot.data() as RoomData;
         if (typeof(tempRoomData) === "undefined") {
           throw "bad room data" //TODO: handle bad room data
         }
 
-        const formatSnapshot = await db.doc(`/formats/${tempRoomData.format.toLowerCase()}`).withConverter(FormatDataConverter).get() // get format doc
+        const formatDoc = doc(db, "formats", tempRoomData.format.toLowerCase()).withConverter(FormatDataConverter);
+        const formatSnapshot = await getDoc(formatDoc); // get format doc
         const tempFormatData = formatSnapshot.data() as FormatData;
         if (typeof(tempFormatData) === "undefined") {
           throw "bad format data" //TODO: handle bad format data
@@ -125,11 +126,11 @@ export default function App () {
         setFormatData(tempFormatData);
         //endregion
 
-        db.doc(`/rooms/${room}`).withConverter(RoomDataConverter).onSnapshot((doc) => {
+        onSnapshot(roomDoc, (doc) => {
           const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
           const newData = doc.data() as RoomData;
           if (source === "Server") setRoomData(newData);
-        });
+        })
       })();
     }
   }, [room]); // firestore updates and initial data
@@ -137,11 +138,11 @@ export default function App () {
   //region set format values
   useEffect(() => {
     if (formats.length > 1) return;
-    db.collection("formats").get()
+    getDocs(collection(db, "formats"))
       .then(collection => collection.docs.map(doc => [doc.data().format, doc.data().abbreviation] as [string,string]) )
       .then(unsorted => unsorted.sort((a, b) => a[0].localeCompare(b[0])) )
       .then(arr => setFormats(arr));
-  }, [db]);
+  }, [db]); // get initial formats
   useEffect(() => { // if offline, set the formats like this
     if (formats.length > 1) return;
     if (offline) {
@@ -150,7 +151,7 @@ export default function App () {
         .sort((a, b) => a[0].localeCompare(b[0]))
       setFormats(docs);
     }
-  }, [offline]);
+  }, [offline]); // get initial formats if offline
   // endregion
 
   //region loading fonts
@@ -159,10 +160,18 @@ export default function App () {
     'MontserratAlternate': require('./assets/fonts/Montserrat_Alternates/MontserratAlternates-Regular.ttf'),
   });
   if(error) console.log(error);
-  if (!loaded) return <AppLoading />;
+  if (!loaded) return <AppLoadingPlaceholder />
   //endregion
 
   // no output if fonts not loaded
-  if (room === '') return <StartScreen uid={uid} joinRoom={joinRoom} formats={formats} offline={offline} setOffline={setOffline}/>;
-  return <TimerScreen isHost={isHost} uid={uid} formatData={formatData} roomData={roomData} restartApp={restartApp} setRoomData={setRoomData}/>;
+  if (room === '') return (
+    <Suspense fallback={<AppLoadingPlaceholder />} >
+      <StartScreen uid={uid} joinRoom={joinRoom} formats={formats} offline={offline} setOffline={setOffline}/>
+    </Suspense>
+  );
+  return (
+    <Suspense fallback={<AppLoadingPlaceholder />} >
+      <TimerScreen isHost={isHost} uid={uid} formatData={formatData} roomData={roomData} restartApp={restartApp} setRoomData={setRoomData}/>
+    </Suspense>
+  );
 }

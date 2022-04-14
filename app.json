@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "debate-app-ts",
-    "slug": "debate-app-ts",
+    "name": "Debate Timer",
+    "slug": "debate-timer-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,7 +15,8 @@
     },
     "assetBundlePatterns": [
       "**/*",
-      "/assets/formats"
+      "assets/*",
+      "assets/fonts/*"
     ],
     "ios": {
       "supportsTablet": true

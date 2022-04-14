@@ -14,7 +14,7 @@ interface PropsInterface {
   setOffline: (newState:boolean) => void
 }
 
-export const StartScreen = (props: PropsInterface) => {
+const StartScreen = (props: PropsInterface) => {
   const [selectedFormat, setSelectedFormat] = useState<string>("CDA");
   let [roomCode, changeRoomCode] = useState("");
   const setRoom = () => {
@@ -22,14 +22,13 @@ export const StartScreen = (props: PropsInterface) => {
     else if (roomCode.length === 7) props.joinRoom(roomCode, false);
   }
   const createRoom = () => {
-    if (props.offline) {
-      props.joinRoom(`offline${selectedFormat.toLowerCase()}`, true);
-      return;
+    if (props.offline) props.joinRoom(`offline${selectedFormat.toLowerCase()}`, true);
+    else {
+      fetch(`https://us-central1-debate-timer-backend.cloudfunctions.net/createRoom?uid=${props.uid}&format=${selectedFormat}`)
+        .then(r => r.json()) // assigns room code to roomCode
+        .then(obj => props.joinRoom(obj.message.code, true))
+        .catch(error => console.log(error)); // moves to the timer page
     }
-    fetch(`https://us-central1-debate-timer-backend.cloudfunctions.net/createRoom?uid=${props.uid}&format=${selectedFormat}`)
-      .then(r => r.json()) // assigns room code to roomCode
-      .then(obj => props.joinRoom(obj.message.code, true))
-      .catch(error => console.log(error)); // moves to the timer page
   };
 
   return (
@@ -42,3 +41,5 @@ export const StartScreen = (props: PropsInterface) => {
     </SafeAreaView>
   );
 }
+
+export default StartScreen;

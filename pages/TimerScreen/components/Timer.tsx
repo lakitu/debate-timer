@@ -18,15 +18,17 @@ const Timer = (props: {formatData: FormatData, roomData: RoomData, isHost: boole
     setPause(props.roomData.speechTime <= MAX_SPEECH_LENGTH);
     if (paused) return; // if paused, don't do an interval
     const grace = props.formatData.times[props.roomData.speechNum][0] === "Prep" ? undefined : props.formatData.grace;
+    const endTime = props.formatData.grace?"-":"" + "0:" + props.formatData.grace??"00" + ".0";
     const interval = setInterval(() => {
       const newDisplayTime = timeToDisplay(props.roomData.speechTime, grace);
       setDisplayTime(newDisplayTime);
-      if (newDisplayTime === `${props.formatData.grace?"-":""}0:${props.formatData.grace ?? "00"}.0` && willVibrate) {
+      // check if speech is done and if the phone will vibrate.
+      if (newDisplayTime === endTime && willVibrate) {
         Vibration.vibrate(Array(5).fill(1000));
         clearInterval(interval);
         setWillVibrate(false);
       }
-    }, 100);
+    }, 80);
     return () => {
       clearInterval(interval);
     };
