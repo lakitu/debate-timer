@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/metro-config": "^0.4.0",
     "@react-native-picker/picker": "2.4.2",
     "expo": "~46.0.10",
     "expo-clipboard": "~3.1.0",
@@ -35,5 +36,6 @@
   },
   "license": "public-domain",
   "private": true,
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "packageManager": "yarn@3.2.4"
 }

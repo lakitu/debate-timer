@@ -1,5 +1,5 @@
 import React from "react";
-import {View, Text, Pressable, Platform} from "react-native"
+import {View, Text, Pressable} from "react-native"
 import {MAX_SPEECH_LENGTH} from "../../../interfaces";
 import {prepStyles as styles} from "../styles";
 

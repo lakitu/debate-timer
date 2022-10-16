@@ -5,7 +5,6 @@ export const timerStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: "column",
-    marginTop: 20,
   },
   lightContainer: {
     backgroundColor: '#d0d0c0',
@@ -50,9 +49,16 @@ export const upperBarStyles = StyleSheet.create({
     padding: 5,
     fontFamily: "RobotoMono"
   },
+  leftContainer: {
+    display: "flex",
+    // flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    paddingHorizontal: 5,
+  },
   backArrow: {
     flex: 1,
-    height: 15,
+    height: 20,
     aspectRatio: 1,
     resizeMode: 'contain',
     paddingHorizontal: 30,

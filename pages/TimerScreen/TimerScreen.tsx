@@ -7,7 +7,16 @@ import HostTools from "./components/HostTools";
 import PrepTimers from "./components/PrepTimers";
 import PrepControls from "./components/PrepControls";
 
-const TimerScreen = (props: {isHost:boolean, uid:string, formatData:FormatData, roomData:RoomData, restartApp:()=>void, setRoomData:(newRoomData:RoomData)=>void}) => {
+interface TimerScreenProps {
+  isHost:boolean,
+  uid:string,
+  formatData:FormatData,
+  roomData:RoomData,
+  restartApp:()=>void,
+  setRoomData:(newRoomData:RoomData)=>void
+}
+
+const TimerScreen = ( props: TimerScreenProps ) => {
   //region functions to interface with firebase
   const nextSpeech = (next: number) => {
     if (props.roomData.code === "OFFLINE") {
@@ -30,11 +39,7 @@ const TimerScreen = (props: {isHost:boolean, uid:string, formatData:FormatData, 
       offlineTogglePrep(props.roomData, props.setRoomData, sideIndex);
       return;
     }
-    fetch(`https://us-central1-debate-timer-backend.cloudfunctions.net/togglePrep?
-      uid=${props.uid}&
-      room=${props.roomData.code}&
-      side=${sideIndex === 0 ? "prop":"opp"}
-    `)
+    fetch(`https://us-central1-debate-timer-backend.cloudfunctions.net/togglePrep?uid=${props.uid}&room=${props.roomData.code}&side=${sideIndex === 0 ? "prop":"opp"}`)
       .catch(err => console.log(err));
   }
   // req.query includes uid, room, newTime
@@ -50,20 +55,20 @@ const TimerScreen = (props: {isHost:boolean, uid:string, formatData:FormatData, 
   //endregion
 
   return (
-    <View style={{flexDirection: "column"}}>
-      <UpperBar formatName={props.formatData.abbreviation} roomCode={props.roomData.code} restartApp={props.restartApp}/>
-      {/*Timer*/}
-      {props.roomData.code ? <Timer formatData={props.formatData} roomData={props.roomData} isHost={props.isHost} setTime={setTime}/> : null}
-      {/*Host Tools*/}
-      {props.isHost && props.roomData.code ? <HostTools speechTime={props.roomData.speechTime}
-                                                        nextSpeech={(next)=>nextSpeech(next)}
-                                                        pauseSpeech={(action:string) => pauseSpeech(action)}
-      /> : null}
-      {/*Prep Timers*/}
-      {props.formatData.prep ? <PrepTimers prepTime={props.roomData.prep} sides={props.formatData.sides}/> : null}
-      {/*Prep Controls*/}
-      {props.isHost && props.formatData.prep ? <PrepControls prep={props.roomData.prep} togglePrep={togglePrep} /> : null}
-    </View>
+      <View style={{flexDirection: "column"}}>
+        <UpperBar formatName={props.formatData.abbreviation} roomCode={props.roomData.code} restartApp={props.restartApp}/>
+        {/*Timer*/}
+        {props.roomData.code ? <Timer formatData={props.formatData} roomData={props.roomData} isHost={props.isHost} setTime={setTime}/> : null}
+        {/*Host Tools*/}
+        {props.isHost && props.roomData.code ? <HostTools speechTime={props.roomData.speechTime}
+                                                          nextSpeech={(next)=>nextSpeech(next)}
+                                                          pauseSpeech={(action:string) => pauseSpeech(action)}
+        /> : null}
+        {/*Prep Timers*/}
+        {props.formatData.prep ? <PrepTimers prepTime={props.roomData.prep} sides={props.formatData.sides}/> : null}
+        {/*Prep Controls*/}
+        {props.isHost && props.formatData.prep ? <PrepControls prep={props.roomData.prep} togglePrep={togglePrep} /> : null}
+      </View>
   );
 }
 
@@ -90,9 +95,8 @@ function offlineTogglePrep(roomData: RoomData, setRoomData:(newRoomData:RoomData
   setRoomData(newRoomData);
 }
 function offlineSetTime(roomData: RoomData, setRoomData:(newRoomData:RoomData)=>void, newTime:number) {
-  const newRoomData = pauseAll(roomData);
-  newRoomData.speechTime = newTime;
-  setRoomData(newRoomData);
+  roomData.speechTime = newTime;
+  setRoomData(roomData);
 }
 function pauseAll(roomData:RoomData):RoomData {
   const newRoomData = JSON.parse(JSON.stringify(roomData)) as RoomData;

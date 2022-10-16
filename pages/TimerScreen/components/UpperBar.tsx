@@ -1,6 +1,6 @@
 import {Image, Pressable, SafeAreaView, Text, View} from "react-native";
 import {upperBarStyles as styles} from "../styles";
-import {setString as setClipboard} from "expo-clipboard";
+import {setStringAsync} from "expo-clipboard";
 import React from "react";
 
 const UpperBar = (props: {formatName: string, roomCode: string, restartApp: ()=>void}) => (
@@ -12,11 +12,11 @@ const UpperBar = (props: {formatName: string, roomCode: string, restartApp: ()=>
         </Pressable>
         <Text style={styles.text}>{props.formatName}</Text>
       </View>
-      <View>
-        <Pressable onPress={()=> {setClipboard(props.roomCode);}}>
-          <Text style={styles.text} selectable={true}>{props.roomCode === '' ? "loading" : props.roomCode}</Text>
-        </Pressable>
-      </View>
+
+      {/*Room code */}
+      <Pressable onPress={()=> {!["loading", "offline"].includes(props.roomCode) && setStringAsync(props.roomCode);}} style={{justifyContent: "flex-end"}}>
+        <Text style={styles.text} selectable={true}>{props.roomCode === '' ? "loading" : props.roomCode}</Text>
+      </Pressable>
     </SafeAreaView>
   </View>
 );

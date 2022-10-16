@@ -11,7 +11,8 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/959ef313-e227-413a-a686-17b830e5e252"
     },
     "assetBundlePatterns": [
       "**/*",
@@ -19,7 +20,8 @@
       "assets/fonts/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kachow95.debate-timer-app"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,6 +31,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "959ef313-e227-413a-a686-17b830e5e252"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }

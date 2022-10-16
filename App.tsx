@@ -1,12 +1,11 @@
-import React, {useEffect, useState, Suspense} from 'react';
-const StartScreen = React.lazy(() => import("./pages/StartScreen/StartScreen"));
-const TimerScreen = React.lazy(() => import("./pages/TimerScreen/TimerScreen"));
+import React, {useEffect, useState} from 'react';
+import StartScreen from "./pages/StartScreen/StartScreen";
+import TimerScreen from "./pages/TimerScreen/TimerScreen";
 import {BlankFormatData, BlankRoomData, FormatData, RoomData} from "./interfaces";
 import {useFonts} from "expo-font"
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, doc, getDoc, onSnapshot, QueryDocumentSnapshot, getDocs } from "firebase/firestore"
 import { getAuth, signInAnonymously } from "firebase/auth/";
-import AppLoadingPlaceholder from "expo/build/launch/AppLoadingPlaceholder";
 
 //region Firebase Config
 const firebaseApp = initializeApp({
@@ -160,18 +159,18 @@ export default function App () {
     'MontserratAlternate': require('./assets/fonts/Montserrat_Alternates/MontserratAlternates-Regular.ttf'),
   });
   if(error) console.log(error);
-  if (!loaded) return <AppLoadingPlaceholder />
+  // if (!loaded) return <AppLoadingPlaceholder />
   //endregion
 
   // no output if fonts not loaded
   if (room === '') return (
-    <Suspense fallback={<AppLoadingPlaceholder />} >
+    // <Suspense fallback={<AppLoadingPlaceholder />} >
       <StartScreen uid={uid} joinRoom={joinRoom} formats={formats} offline={offline} setOffline={setOffline}/>
-    </Suspense>
+    // </Suspense>
   );
   return (
-    <Suspense fallback={<AppLoadingPlaceholder />} >
+    // <Suspense fallback={<AppLoadingPlaceholder />} >
       <TimerScreen isHost={isHost} uid={uid} formatData={formatData} roomData={roomData} restartApp={restartApp} setRoomData={setRoomData}/>
-    </Suspense>
+    // </Suspense>
   );
 }

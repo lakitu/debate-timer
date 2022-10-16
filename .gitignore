@@ -15,3 +15,12 @@ web-build/
 
 # ide settings
 .idea
+
+# yarn
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
